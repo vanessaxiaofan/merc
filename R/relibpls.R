@@ -10,7 +10,7 @@
 #' charaterize the measurement error model. Details are given in Rosner et al.(1989), Rosner et al.(1990), and
 #' Rosner et al.(1992) including "real data" examples
 #' @references Rosner B, Spiegelman D, Willett WC. Correction of logistic regression relative risk estimates and confidence intervals for measurement error: the case of multiple covariates measured with error. Am J Epidemiol. 1990 Oct;132(4):734-45. doi: 10.1093/oxfordjournals.aje.a115715. PMID: 2403114.
-#' @param supplyEstimates=FALSE Indicates whether uncorrected estimates will be supplied by the user.
+#' @param supplyEstimates Indicates whether uncorrected estimates will be supplied by the user.
 #' @param relib Name of the reliability dataset
 #' @param ms name of main study data set
 #' @param pointEstimates A numeric vector of point estimates from uncorrected standard regression analysis.
@@ -29,7 +29,7 @@
 #' (e.g. x1 y1 z1 x2 y2 z2 for measures). The variables must be in the same order as the names in the names and increments dataset specified in `pointEstimates`
 #' @param rr Number of reliability measures taken (e.g. 2).
 #' @param weights Name of the dataset containing the variable names and increments for the odds ratio or regression slopes.Including mismeasured and perfectly measured variables
-#' @param r1=1 Number of replicates in main study
+#' @param r1 Number of replicates in main study
 #' @param method Methods for modeling, currently only `lm` or `glm` methods are available. Required.
 #' @param family Supply family parameter to pass to glm function. Not a character. Required if method="glm".
 #' @param link Supply link parameter to pass to glm function. Should be character. Required if method="glm".
@@ -56,8 +56,12 @@
 #' outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
 #' Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 #' VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)]
-#' relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts, method = "lm" )
-#' relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), outcome = c("y"), rr=3, ms=test,method = "lm",weights=wts)
+#' relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar,
+#'          vcovEstimates = VBstar,sur = c("x"), woe = c("s"), weri = c("x","x2","x3"),
+#'          rr=3, ms=test, weights=wts, method = "lm" )
+#' relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
+#'          weri = c("x","x2","x3"), outcome = c("y"), rr=3,
+#'          ms=test,method = "lm",weights=wts)
 #'
 #' # # Only one mismeasured covariate, logistic model
 #' ### Fit main study logistic model
@@ -67,8 +71,13 @@
 #' outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
 #' Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 #' VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)] # p' x p'
-#' relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,link = "logit",method = "glm" )
-#' relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), outcome = c("case"), rr=3, ms=test,method = "glm", family = binomial, link = "logit", weights=wts)
+#' relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar,
+#'          sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,
+#'          link = "logit",method = "glm" )
+#' relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
+#'          weri = c("x","x2","x3"),outcome = c("case"), rr=3, ms=test,
+#'          method = "glm", family = binomial, link = "logit", weights=wts)
+#' @importFrom stats as.formula coef cov na.omit vcov
 #' @export
 
 relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimates=NA, sur, woe=NA,
@@ -161,7 +170,7 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
   }
 
   if(supplyEstimates==FALSE){
-    ms_complete<-ms%>%dplyr::select(all_of(allVars_ms))%>%na.omit()
+    ms_complete<- na.omit(dplyr::select(ms,dplyr::all_of(allVars_ms)))
     X_MS <- stats::model.matrix(object= as.formula(outcomeFormula),data=ms_complete)
     Y_MS<- ms_complete[,outcome]
     outcomeModelVarNames<-colnames(X_MS)
@@ -199,94 +208,94 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
   # Caculate adjusted point estimates #
   ###############################
 
-  WT = weights
+  WT <-  weights
   ###### Compute the corrected point estimate ######
-  q = length(woe)  # number of without measurement error variables
-  p = length(sur) # number of measurement error variables
+  q <-  length(woe)  # number of without measurement error variables
+  p <-  length(sur) # number of measurement error variables
 
-  pq=p+q # total numbers of varibles in main study
-  pqsq=pq*pq
+  pq <- p+q # total numbers of varibles in main study
+  pqsq <- pq*pq
 
   #Use the main study
-  Z = ms[, c(sur,woe)]
+  Z <-  ms[, c(sur,woe)]
   ## obtain sigmaZ
-  SZ = cov(Z) #checked
+  SZ <- cov(Z) #checked
 
   #Use the reliability study
-  r = rr # number of replicates
-  S = matrix(data=0,nrow=p,ncol=p)
-  SR = matrix(data=0,nrow=p,ncol=p)
-  X = matrix(data=0,nrow=p,ncol=p)
+  r <-  rr # number of replicates
+  S <-  matrix(data=0,nrow=p,ncol=p)
+  SR <-  matrix(data=0,nrow=p,ncol=p)
+  X <-  matrix(data=0,nrow=p,ncol=p)
 
   for(i in 1:nrow(relib)){
-    X = matrix(data=as.numeric(relib[i,]),nrow=r,ncol=p,byrow = TRUE)
-    SR = cov(X)/nrow(relib)
-    S = S + SR
+    X <-  matrix(data=as.numeric(relib[i,]),nrow=r,ncol=p,byrow = TRUE)
+    SR <-  cov(X)/nrow(relib)
+    S <-  S + SR
   }
 
-  SE = as.matrix(Matrix::bdiag(S,matrix(0,nrow=q, ncol=q))) # q is the number of variables without measurement error
-  SX = SZ-(SE/r1)
-  SXV = solve(SX)
-  RV = (SX + SE/r1) %*% SXV
-  BLINR = t(B) %*% RV
+  SE <-  as.matrix(Matrix::bdiag(S,matrix(0,nrow=q, ncol=q))) # q is the number of variables without measurement error
+  SX <-  SZ-(SE/r1)
+  SXV <-  solve(SX)
+  RV <-  (SX + SE/r1) %*% SXV
+  BLINR <-  t(B) %*% RV
 
   ###############################
   # Caculate adjusted variance estimate #
   ###############################
 
-  tem1 = t(c(1:pq)%*%t(rep(1,pq)))
+  tem1 <-  t(c(1:pq)%*%t(rep(1,pq)))
   gdata::upperTriangle(tem1) <- gdata::lowerTriangle(tem1, byrow=TRUE)
-  tem2 = c(1:pq)%*%t(rep(1,pq))
+  tem2 <-  c(1:pq)%*%t(rep(1,pq))
   gdata::upperTriangle(tem2) <- gdata::lowerTriangle(tem2, byrow=TRUE)
-  DESIGN1 = as.vector(tem1)
-  DESIGN2 = as.vector(tem2)
+  DESIGN1 <-  as.vector(tem1)
+  DESIGN2 <-  as.vector(tem2)
 
-  n = nrow(relib) # number of persons in reliability study
-  n1 = nrow(ms) # number of persons in main study
+  n <-  nrow(relib) # number of persons in reliability study
+  n1 <-  nrow(ms) # number of persons in main study
 
-  dnr = 1/(n*(r-1))
-  COVSE = (SE[DESIGN1,DESIGN1] * SE[DESIGN2,DESIGN2]
+  dnr <-  1/(n*(r-1))
+  COVSE <-  (SE[DESIGN1,DESIGN1] * SE[DESIGN2,DESIGN2]
            + SE[DESIGN1,DESIGN2] * SE[DESIGN2,DESIGN1])*dnr
   #checked
-  dk1=1/(n1-1)
-  COVSX=(SZ[DESIGN1,DESIGN1] * SZ[DESIGN2,DESIGN2]
+  dk1 <- 1/(n1-1)
+  COVSX <- (SZ[DESIGN1,DESIGN1] * SZ[DESIGN2,DESIGN2]
          +SZ[DESIGN1,DESIGN2] * SZ[DESIGN2,DESIGN1])*dk1
-  COVSX = COVSX + COVSE
+  COVSX  <-  COVSX + COVSE
 
-  COVSXV=diag(pqsq)
-  COVSXE=matrix(data=0,nrow=pqsq,ncol=pqsq)
+  COVSXV <- diag(pqsq)
+  COVSXE <- matrix(data=0,nrow=pqsq,ncol=pqsq)
 
   for (i in 1:pq){
     for(j in i:pq){
-      rowSXVij=kronecker(SXV[i,],SXV[,j])
-      x=j+(i-1)*pq
-      x2=i+(j-1)*pq
+      rowSXVij <- kronecker(SXV[i,],SXV[,j])
+      x <- j+(i-1)*pq
+      x2 <- i+(j-1)*pq
       for(l in i:pq){
         for(k in l:pq){
           #sumv=sum(kronecker(t(rowSXVij),(kronecker(SXV[k,],SXV[,l]))) * COVSX)
-          sumv=sum((t(rowSXVij) %x% (SXV[k,] %x% SXV[,l])) * COVSX)
-          y=l+(k-1)*pq
-          y2=k+(l-1)*pq
-          COVSXV[x,y]=sumv
-          COVSXV[y,x]=sumv
-          COVSXV[x2,y]=sumv
-          COVSXV[y,x2]=sumv
-          COVSXV[x2,y2]=sumv
-          COVSXV[y2,x2]=sumv
-          COVSXV[x,y2]=sumv
-          COVSXV[y2,x]=sumv
+          sumv <- sum((t(rowSXVij) %x% (SXV[k,] %x% SXV[,l])) * COVSX)
+          y <- l+(k-1)*pq
+          y2 <- k+(l-1)*pq
+          COVSXV[x,y] <- sumv
+          COVSXV[y,x] <- sumv
+          COVSXV[x2,y] <- sumv
+          COVSXV[y,x2] <- sumv
+          COVSXV[x2,y2] <- sumv
+          COVSXV[y2,x2] <- sumv
+          COVSXV[x,y2] <- sumv
+          COVSXV[y2,x] <- sumv
 
         }
       }
       for(k in 1:p){
         for(l in k:p){
-          y=l+(k-1)*pq
-          y2=k+(l-1)*pq
-          sume=-sum(rowSXVij*COVSE[,y])
-          COVSXE[x,y]=sume
-          COVSXE[x,y2]=sume
-          COVSXE[x2,y]=sume
-          COVSXE[x2,y2]=sume
+          y <- l+(k-1)*pq
+          y2 <- k+(l-1)*pq
+          sume <- -sum(rowSXVij*COVSE[,y])
+          COVSXE[x,y] <- sume
+          COVSXE[x,y2] <- sume
+          COVSXE[x2,y] <- sume
+          COVSXE[x2,y2] <- sume
 
         }
       }
@@ -295,59 +304,59 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
 
 
   #####
-  COVR=matrix(data=0,nrow=pqsq,ncol=pqsq)
-  GN=matrix(data=0,nrow=pq,ncol=pq)
-  WR=diag(pq)
+  COVR <- matrix(data=0,nrow=pqsq,ncol=pqsq)
+  GN <- matrix(data=0,nrow=pq,ncol=pq)
+  WR <- diag(pq)
 
   for(j in 1:pq){
-    jstripes=seq(j,(pq-1)*pq+j,pq)
+    jstripes <- seq(j,(pq-1)*pq+j,pq)
     for(l in j:pq){
-      lstripes=seq(l,(pq-1)*pq+l,pq)
+      lstripes <- seq(l,(pq-1)*pq+l,pq)
       for(i in 1:p){
-        iband=c(((i-1)*pq+1) : (i*pq))
-        x=j+(i-1)*pq
+        iband <- c(((i-1)*pq+1) : (i*pq))
+        x <- j+(i-1)*pq
         for(k in max((j==l)*i,1):pq){
-          kband=c(((k-1)*pq+1):(k*pq))
-          y=l+(k-1)*pq
+          kband <- c(((k-1)*pq+1):(k*pq))
+          y <- l+(k-1)*pq
 
-          sumr=sum((SXV[,j] %x% t(SXV[l,])) * COVSE[iband,kband])+sum( (SE[,k] %x% t(SXV[j,])) * COVSXE[lstripes,iband])+sum(( SE[,i] %x% t(SXV[l,])) * COVSXE[jstripes,kband])+sum(( SE[,i] %x% t(SE[k,])) * COVSXV[jstripes,lstripes])
-          COVR[x,y]=sumr
-          COVR[y,x]=sumr
+          sumr <- sum((SXV[,j] %x% t(SXV[l,])) * COVSE[iband,kband])+sum( (SE[,k] %x% t(SXV[j,])) * COVSXE[lstripes,iband])+sum(( SE[,i] %x% t(SXV[l,])) * COVSXE[jstripes,kband])+sum(( SE[,i] %x% t(SE[k,])) * COVSXV[jstripes,lstripes])
+          COVR[x,y] <- sumr
+          COVR[y,x] <- sumr
 
-          GN[i,k]=sumr
-          GN[k,i]=COVR[(k-1)*pq+j,(i-1)*pq+l]
+          GN[i,k] <- sumr
+          GN[k,i] <- COVR[(k-1)*pq+j,(i-1)*pq+l]
 
         }
       }
-      WR[j,l]=t(B) %*% GN %*% (B) ####not sure
-      WR[l,j]=WR[j,l]
+      WR[j,l] <- t(B) %*% GN %*% (B) ####not sure
+      WR[l,j] <- WR[j,l]
     }
   }
-  VARA = t(RV) %*% V %*% RV+WR/(r1*r1) # no r1
+  VARA  <-  t(RV) %*% V %*% RV+WR/(r1*r1) # no r1
 
   ###############################
   # Compose output table #
   ###############################
   # logistic model
   if(method=="glm"&link=="logit"){
-    BLINR = t(BLINR)
-    SED=sqrt(diag(V))
-    ODDR=exp(WT*B)
-    UB=exp(WT*(B+1.96*SED))
-    LB=exp(WT*(B-1.96*SED))
-    CI=c(paste0(LB,"-",UB))
+    BLINR  <-  t(BLINR)
+    SED <- sqrt(diag(V))
+    ODDR <- exp(WT*B)
+    UB <- exp(WT*(B+1.96*SED))
+    LB <- exp(WT*(B-1.96*SED))
+    CI <- c(paste0(LB,"-",UB))
 
-    SEDN=sqrt(diag(VARA))
-    ODDRN=exp(WT*BLINR)
-    UBN=exp(WT*(BLINR+1.96*SEDN))
-    LBN=exp(WT*(BLINR-1.96*SEDN))
-    CIN=c(paste0(LBN,"-",UBN))
+    SEDN <- sqrt(diag(VARA))
+    ODDRN <- exp(WT*BLINR)
+    UBN <- exp(WT*(BLINR+1.96*SEDN))
+    LBN <- exp(WT*(BLINR-1.96*SEDN))
+    CIN <- c(paste0(LBN,"-",UBN))
 
     # compose output tables
-    Uncorrected= data.frame(t(WT), B, SED, t(ODDR), CI)
+    Uncorrected <-  data.frame(t(WT), B, SED, t(ODDR), CI)
     colnames(Uncorrected)<-c("Weights","B","SE(B)","OR(B)","95% CI(OR)")
     #rownames(Uncorrected)<-outcomeModelVarNames
-    Corrected= data.frame(t(WT), BLINR, SEDN, t(ODDRN), CIN)
+    Corrected <-  data.frame(t(WT), BLINR, SEDN, t(ODDRN), CIN)
     colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","95% CI(OR)")
     #rownames(Corrected)<-outcomeModelVarNames
     outputList<-list(Uncorrected,Corrected)
@@ -355,22 +364,22 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
 
   }
   else{
-    BLINR = t(BLINR)
-    SED=sqrt(diag(V))
-    UB=(WT*(B+1.96*SED))
-    LB=(WT*(B-1.96*SED))
-    CI=c(paste0(LB,"-",UB))
+    BLINR  <-  t(BLINR)
+    SED <- sqrt(diag(V))
+    UB <- (WT*(B+1.96*SED))
+    LB <- (WT*(B-1.96*SED))
+    CI <- c(paste0(LB,"-",UB))
 
-    SEDN=sqrt(diag(VARA))
-    UBN=(WT*(BLINR+1.96*SEDN))
-    LBN=(WT*(BLINR-1.96*SEDN))
-    CIN=c(paste0(LBN,"-",UBN))
+    SEDN <- sqrt(diag(VARA))
+    UBN <- (WT*(BLINR+1.96*SEDN))
+    LBN <- (WT*(BLINR-1.96*SEDN))
+    CIN <- c(paste0(LBN,"-",UBN))
 
     # compose output tables
-    Uncorrected= data.frame(t(WT), B, SED, CI)
+    Uncorrected <-  data.frame(t(WT), B, SED, CI)
     colnames(Uncorrected)<-c("Weights","B","SE(B)","95% CI(OR)")
     #rownames(Uncorrected)<-outcomeModelVarNames
-    Corrected= data.frame(t(WT), BLINR, SEDN, CIN)
+    Corrected <-  data.frame(t(WT), BLINR, SEDN, CIN)
     colnames(Corrected)<-c("Weights","B","SE(B)","95% CI(OR)")
     #rownames(Corrected)<-names(B)
     outputList<-list(Uncorrected,Corrected)
@@ -383,6 +392,3 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
 
 
 
-# #
-#
-#

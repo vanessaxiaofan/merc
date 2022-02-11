@@ -23,6 +23,8 @@ relibpls(
 )
 }
 \arguments{
+\item{supplyEstimates}{Indicates whether uncorrected estimates will be supplied by the user.}
+
 \item{relib}{Name of the reliability dataset}
 
 \item{pointEstimates}{A numeric vector of point estimates from uncorrected standard regression analysis.
@@ -51,15 +53,13 @@ to the (transformed) names from `covCalib` followed by `covOutcome`. Must be sup
 
 \item{weights}{Name of the dataset containing the variable names and increments for the odds ratio or regression slopes.Including mismeasured and perfectly measured variables}
 
+\item{r1}{Number of replicates in main study}
+
 \item{method}{Methods for modeling, currently only `lm` or `glm` methods are available. Required.}
 
 \item{family}{Supply family parameter to pass to glm function. Not a character. Required if method="glm".}
 
 \item{link}{Supply link parameter to pass to glm function. Should be character. Required if method="glm".}
-
-\item{supplyEstimates=FALSE}{Indicates whether uncorrected estimates will be supplied by the user.}
-
-\item{r1=1}{Number of replicates in main study}
 }
 \value{
 printable dataframe from standard regression results (when supplyEstimates==FALSE) as well as corrected results
@@ -93,8 +93,12 @@ outcomeParamVCOV=vcov(outModel)
 outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
 Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)]
-relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts, method = "lm" )
-relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), outcome = c("y"), rr=3, ms=test,method = "lm",weights=wts)
+relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar,
+         vcovEstimates = VBstar,sur = c("x"), woe = c("s"), weri = c("x","x2","x3"),
+         rr=3, ms=test, weights=wts, method = "lm" )
+relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
+         weri = c("x","x2","x3"), outcome = c("y"), rr=3,
+         ms=test,method = "lm",weights=wts)
 
 # # Only one mismeasured covariate, logistic model
 ### Fit main study logistic model
@@ -104,8 +108,12 @@ outcomeParamVCOV=vcov(outModel)
 outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
 Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)] # p' x p'
-relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,link = "logit",method = "glm" )
-relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), outcome = c("case"), rr=3, ms=test,method = "glm", family = binomial, link = "logit", weights=wts)
+relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar,
+         sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,
+         link = "logit",method = "glm" )
+relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
+         weri = c("x","x2","x3"),outcome = c("case"), rr=3, ms=test,
+         method = "glm", family = binomial, link = "logit", weights=wts)
 }
 \references{
 Rosner B, Spiegelman D, Willett WC. Correction of logistic regression relative risk estimates and confidence intervals for measurement error: the case of multiple covariates measured with error. Am J Epidemiol. 1990 Oct;132(4):734-45. doi: 10.1093/oxfordjournals.aje.a115715. PMID: 2403114.

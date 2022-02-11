@@ -18,3 +18,5 @@ Imports:
     gdata,
     stats,
     Matrix
+URL: https://github.com/vanessaxiaofan/merc
+BugReports: https://github.com/vanessaxiaofan/merc/issues

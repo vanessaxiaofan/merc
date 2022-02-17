@@ -4,36 +4,59 @@
 
 #' @title relibpls
 #' @author Xiaofan Liu and Xin Zhou
-#' @description This funciton calculates regression coefficients, their standard errors, and odds ratios,
-#' when relevant, and 95% confidence intervals for a biologically meaningful difference specified
-#' by model covariates. Logistic model are implemented. A reliability study is required to empirically
-#' charaterize the measurement error model. Details are given in Rosner et al.(1989), Rosner et al.(1990), and
-#' Rosner et al.(1992) including "real data" examples
-#' @references Rosner B, Spiegelman D, Willett WC. Correction of logistic regression relative risk estimates and confidence intervals for measurement error: the case of multiple covariates measured with error. Am J Epidemiol. 1990 Oct;132(4):734-45. doi: 10.1093/oxfordjournals.aje.a115715. PMID: 2403114.
-#' @param supplyEstimates Indicates whether uncorrected estimates will be supplied by the user.
+#' @description This funciton calculates regression coefficients, their standard
+#'   errors, and odds ratios, when relevant, and 95% confidence intervals for a
+#'   biologically meaningful difference specified by model covariates. Logistic
+#'   model are implemented. A reliability study is required to empirically
+#'   charaterize the measurement error model. Details are given in Rosner et
+#'   al.(1989), Rosner et al.(1990), and Rosner et al.(1992) including "real
+#'   data" examples
+#' @references Rosner B, Spiegelman D, Willett WC. Correction of logistic
+#'   regression relative risk estimates and confidence intervals for measurement
+#'   error: the case of multiple covariates measured with error. Am J Epidemiol.
+#'   1990 Oct;132(4):734-45. doi: 10.1093/oxfordjournals.aje.a115715. PMID:
+#'   2403114.
+#' @param supplyEstimates Indicates whether uncorrected estimates will be
+#'   supplied by the user.
 #' @param relib Name of the reliability dataset
 #' @param ms name of main study data set
-#' @param pointEstimates A numeric vector of point estimates from uncorrected standard regression analysis.
-#' It must be in the order of the variables indicated in sur and woe
-#' Intercept estimate must be removed. Only binary and numeric variables are accepted, all other classes of variables must be transformed
-#' (this is automatically done by most regression softwares). Must include names for each point estimates corresponding to the (transformed)
-#' names from `covCalib` followed by `covOutcome`. Must be supplied if supplyEstimates = TRUE.
-#' @param vcovEstimates A p by p Variance-covariance matrix estimates from uncorrected standard regression analysis.
-#' Intercept estimates must be removed. Only binary and numeric variables are accepted, all other classes of variables must be transformed
-#' (this is automatically done by most regression softwares). Must include column names (excluding intercept) for the estimates corresponding
-#' to the (transformed) names from `covCalib` followed by `covOutcome`. Must be supplied if supplyEstimates = TRUE.
-#' @param sur character vector of mismeasured exposure and covariates (i.e. surrogates) in the main study dataset
+#' @param pointEstimates A numeric vector of point estimates from uncorrected
+#'   standard regression analysis. It must be in the order of the variables
+#'   indicated in sur and woe Intercept estimate must be removed. Only binary
+#'   and numeric variables are accepted, all other classes of variables must be
+#'   transformed (this is automatically done by most regression softwares). Must
+#'   include names for each point estimates corresponding to the (transformed)
+#'   names from `covCalib` followed by `covOutcome`. Must be supplied if
+#'   supplyEstimates = TRUE.
+#' @param vcovEstimates A p by p Variance-covariance matrix estimates from
+#'   uncorrected standard regression analysis. Intercept estimates must be
+#'   removed. Only binary and numeric variables are accepted, all other classes
+#'   of variables must be transformed (this is automatically done by most
+#'   regression softwares). Must include column names (excluding intercept) for
+#'   the estimates corresponding to the (transformed) names from `covCalib`
+#'   followed by `covOutcome`. Must be supplied if supplyEstimates = TRUE.
+#' @param sur character vector of mismeasured exposure and covariates (i.e.
+#'   surrogates) in the main study dataset
 #' @param woe Character vector of names of perfectly measured covariates
 #' @param outcome Outcome variable
-#' @param weri  Character vector of names of variables which have reliability measures. These should have a set of variable names for each reliability measure
-#' (e.g. x1 y1 z1 x2 y2 z2 for measures). The variables must be in the same order as the names in the names and increments dataset specified in `pointEstimates`
+#' @param weri  Character vector of names of variables which have reliability
+#'   measures. These should have a set of variable names for each reliability
+#'   measure (e.g. x1 y1 z1 x2 y2 z2 for measures). The variables must be in the
+#'   same order as the names in the names and increments dataset specified in
+#'   `pointEstimates`
 #' @param rr Number of reliability measures taken (e.g. 2).
-#' @param weights Name of the dataset containing the variable names and increments for the odds ratio or regression slopes.Including mismeasured and perfectly measured variables
+#' @param weights Name of the dataset containing the variable names and
+#'   increments for the odds ratio or regression slopes.Including mismeasured
+#'   and perfectly measured variables
 #' @param r1 Number of replicates in main study
-#' @param method Methods for modeling, currently only `lm` or `glm` methods are available. Required.
-#' @param family Supply family parameter to pass to glm function. Not a character. Required if method="glm".
-#' @param link Supply link parameter to pass to glm function. Should be character. Required if method="glm".
-#' @return printable dataframe from standard regression results (when supplyEstimates==FALSE) as well as corrected results
+#' @param method Methods for modeling, currently only `lm` or `glm` methods are
+#'   available. Required.
+#' @param family Supply family parameter to pass to glm function. Not a
+#'   character. Required if method="glm".
+#' @param link Supply link parameter to pass to glm function. Should be
+#'   character. Required if method="glm".
+#' @return printable dataframe from standard regression results (when
+#'   supplyEstimates==FALSE) as well as corrected results
 #' @examples
 #' # # Only one mismeasured covariate, linear model
 #' y <- c(1,1,2,3,2,3)
@@ -386,7 +409,6 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
     names(outputList)<-c("Uncorrected","Corrected")
 
   }
-
   return(outputList)
 }
 

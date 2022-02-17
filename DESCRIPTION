@@ -17,6 +17,10 @@ Imports:
     dplyr,
     gdata,
     stats,
-    Matrix
+    Matrix,
+    earth,
+    matrixcalc
 URL: https://github.com/vanessaxiaofan/merc
 BugReports: https://github.com/vanessaxiaofan/merc/issues
+Depends: 
+    R (>= 2.10)

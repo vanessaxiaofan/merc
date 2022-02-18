@@ -256,6 +256,8 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
     S <-  S + SR
   }
 
+  remove(list=(c("X","SR")))
+
   SE <-  as.matrix(Matrix::bdiag(S,matrix(0,nrow=q, ncol=q))) # q is the number of variables without measurement error
   SX <-  SZ-(SE/r1)
   SXV <-  solve(SX)
@@ -362,48 +364,54 @@ relibpls <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstima
   ###############################
   # logistic model
   if(method=="glm"&link=="logit"){
-    BLINR  <-  t(BLINR)
-    SED <- sqrt(diag(V))
-    ODDR <- exp(WT*B)
-    UB <- exp(WT*(B+1.96*SED))
-    LB <- exp(WT*(B-1.96*SED))
-    CI <- c(paste0(LB,"-",UB))
 
-    SEDN <- sqrt(diag(VARA))
-    ODDRN <- exp(WT*BLINR)
-    UBN <- exp(WT*(BLINR+1.96*SEDN))
-    LBN <- exp(WT*(BLINR-1.96*SEDN))
-    CIN <- c(paste0(LBN,"-",UBN))
+    SED <- round(sqrt(diag(V)),5)
+    ODDR <- round(exp(WT*B),5)
+    UB <- round(exp(WT*(B+1.96*SED)),5)
+    LB <- round(exp(WT*(B-1.96*SED)),5)
+    #CI <- c(paste0(LB,"-",UB))
+    zValue <- B/SED
+    pValue <- 2*pnorm(-abs(as.numeric(zValue)))
 
+    BLINR  <-  round(t(BLINR),5)
+    SEDN <- round(sqrt(diag(VARA)),5)
+    ODDRN <- round(exp(WT*BLINR),5)
+    UBN <- round(exp(WT*(BLINR+1.96*SEDN)),5)
+    LBN <- round(exp(WT*(BLINR-1.96*SEDN)),5)
+    zValueN <- BLINR/SEDN
+    pValueN <- 2*pnorm(-abs(as.numeric(zValueN)))
+    #CIN <- c(paste0(LBN,"-",UBN))
     # compose output tables
-    Uncorrected <-  data.frame(t(WT), B, SED, t(ODDR), CI)
-    colnames(Uncorrected)<-c("Weights","B","SE(B)","OR(B)","95% CI(OR)")
+    Uncorrected <-  data.frame(t(WT), B, SED, t(ODDR),zValue, pValue, t(LB), t(UB))
+    colnames(Uncorrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)","lower 95%CI","upper 95%CI")
     #rownames(Uncorrected)<-outcomeModelVarNames
-    Corrected <-  data.frame(t(WT), BLINR, SEDN, t(ODDRN), CIN)
-    colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","95% CI(OR)")
+    Corrected <-  data.frame(t(WT), BLINR, SEDN, t(ODDRN), zValueN, pValueN, t(LBN), t(UBN))
+    colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)", "lower 95%CI(OR)","lower 95%CI(OR)")
     #rownames(Corrected)<-outcomeModelVarNames
     outputList<-list(Uncorrected,Corrected)
     names(outputList)<-c("Uncorrected","Corrected")
 
   }
   else{
-    BLINR  <-  t(BLINR)
-    SED <- sqrt(diag(V))
-    UB <- (WT*(B+1.96*SED))
-    LB <- (WT*(B-1.96*SED))
-    CI <- c(paste0(LB,"-",UB))
 
-    SEDN <- sqrt(diag(VARA))
-    UBN <- (WT*(BLINR+1.96*SEDN))
-    LBN <- (WT*(BLINR-1.96*SEDN))
-    CIN <- c(paste0(LBN,"-",UBN))
+    SED <- round(sqrt(diag(V)),5)
+    UB <- round(WT*(B+1.96*SED),5)
+    LB <- round(WT*(B-1.96*SED),5)
+    zValue <- B/SED
+    pValue <- 2*pnorm(-abs(as.numeric(zValue)))
 
+    BLINR  <-  round(t(BLINR),5)
+    SEDN <- round(sqrt(diag(VARA)),5)
+    UBN <- round((WT*(BLINR+1.96*SEDN)),5)
+    LBN <- round((WT*(BLINR-1.96*SEDN)),5)
+    zValueN <- BLINR/SEDN
+    pValueN <- 2*pnorm(-abs(as.numeric(zValueN)))
     # compose output tables
-    Uncorrected <-  data.frame(t(WT), B, SED, CI)
-    colnames(Uncorrected)<-c("Weights","B","SE(B)","95% CI(OR)")
+    Uncorrected <-  data.frame(t(WT), B, SED, zValue, pValue, t(LB), t(UB))
+    colnames(Uncorrected)<-c("Weights","B","SE(B)","Z Value","Pr(>|Z|)","lower 95%CI","upper 95%CI")
     #rownames(Uncorrected)<-outcomeModelVarNames
-    Corrected <-  data.frame(t(WT), BLINR, SEDN, CIN)
-    colnames(Corrected)<-c("Weights","B","SE(B)","95% CI(OR)")
+    Corrected <-  data.frame(t(WT), BLINR, SEDN, zValueN, pValueN, t(LBN), t(UBN))
+    colnames(Corrected)<-c("Weights","B","SE(B)","Z Value","Pr(>|Z|)","lower 95%CI","lower 95%CI")
     #rownames(Corrected)<-names(B)
     outputList<-list(Uncorrected,Corrected)
     names(outputList)<-c("Uncorrected","Corrected")

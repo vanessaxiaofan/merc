@@ -1,10 +1,10 @@
 Package: merc
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Regression calibration methods for validation study and reliability study
 Version: 0.1.0.9000
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: Xiaofan Liu, Xin Zhou, Wenze Tang, Molin Wang
+Maintainer: Xiaofan Liu, Wenze Tang <liuxiaofanruc@outlook.com>
+Description: 
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE
 Encoding: UTF-8

@@ -3,6 +3,7 @@
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/vanessaxiaofan/merc/workflows/R-CMD-check/badge.svg)](https://github.com/vanessaxiaofan/merc/actions)
 <!-- badges: end -->
 
 The goal of merc is to implement regression calibration methods for

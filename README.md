@@ -57,9 +57,16 @@ Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)] # p' x p'
 
 # Provide point estimate
-fit1 <- relibpls(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,link = "logit",method = "glm" )
+fit1 <- mercRel(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,link = "logit",method = "glm" )
 fit1
-#> $Uncorrected
+#> 
+#> Call:
+#> mercRel(supplyEstimates = TRUE, relib = relib, pointEstimates = Bstar, 
+#>     vcovEstimates = VBstar, sur = c("x"), woe = c("s"), weri = c("x", 
+#>         "x2", "x3"), rr = 3, ms = test, weights = wts, method = "glm", 
+#>     link = "logit")
+#> 
+#> Coefficients Uncorrected Model:
 #>   Weights           B   SE(B)   OR(B)     Z Value  Pr(>|Z|) lower 95%CI
 #> x       1 -0.04791056 1.10300 0.95322 -0.04343659 0.9653535     0.10972
 #> s       1  0.42994470 0.83453 1.53717  0.51519382 0.6064176     0.29947
@@ -67,7 +74,7 @@ fit1
 #> x     8.28105
 #> s     7.89022
 #> 
-#> $Corrected
+#> Coefficients Corrected Model:
 #>   Weights        B   SE(B)   OR(B)     Z Value  Pr(>|Z|) lower 95%CI(OR)
 #> x       1 -0.05027 1.15735 0.95097 -0.04343543 0.9653544         0.09840
 #> s       1  0.43037 0.83639 1.53783  0.51455661 0.6068629         0.29851
@@ -76,9 +83,16 @@ fit1
 #> s         7.92240
 
 # Without point estimate
-fit2 <- relibpls(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), outcome = c("case"), rr=3, ms=test,method = "glm", family = binomial, link = "logit", weights=wts)
+fit2 <- mercRel(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), outcome = c("case"), rr=3, ms=test,method = "glm", family = binomial, link = "logit", weights=wts)
 fit2
-#> $Uncorrected
+#> 
+#> Call:
+#> mercRel(supplyEstimates = FALSE, relib = relib, sur = c("x"), 
+#>     woe = c("s"), outcome = c("case"), weri = c("x", "x2", "x3"), 
+#>     rr = 3, ms = test, weights = wts, method = "glm", family = binomial, 
+#>     link = "logit")
+#> 
+#> Coefficients Uncorrected Model:
 #>   Weights           B   SE(B)   OR(B)     Z Value  Pr(>|Z|) lower 95%CI
 #> x       1 -0.04791056 1.10300 0.95322 -0.04343659 0.9653535     0.10972
 #> s       1  0.42994470 0.83453 1.53717  0.51519382 0.6064176     0.29947
@@ -86,7 +100,7 @@ fit2
 #> x     8.28105
 #> s     7.89022
 #> 
-#> $Corrected
+#> Coefficients Corrected Model:
 #>   Weights        B   SE(B)   OR(B)     Z Value  Pr(>|Z|) lower 95%CI(OR)
 #> x       1 -0.05027 1.15735 0.95097 -0.04343543 0.9653544         0.09840
 #> s       1  0.43037 0.83639 1.53783  0.51455661 0.6068629         0.29851

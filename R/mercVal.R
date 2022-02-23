@@ -535,7 +535,6 @@ if(length(covOutcome)==0){
     outputList<-list(BSebP,VB,GEV,S)
     names(outputList)<-c("correctedCoefTable","correctedVCOV","calibrationModelCoefTable","calibrationModelVCOV")
   }
-
   return(outputList)
 
 }

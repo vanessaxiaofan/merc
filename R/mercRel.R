@@ -417,6 +417,9 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     names(outputList)<-c("Uncorrected","Corrected")
 
   }
+  cl <- match.call()
+  class(outputList) <- 'mercRel'
+  attr(outputList, "call") <- match.call()
   return(outputList)
 }
 

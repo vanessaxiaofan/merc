@@ -1,8 +1,8 @@
 #####################
-# merc.rel function #
+# mercRel function #
 #####################
 
-#' @title merc.rel
+#' @title mercRel
 #' @author Xiaofan Liu and Xin Zhou
 #' @description This funciton calculates regression coefficients, their standard
 #'   errors, and odds ratios, when relevant, and 95% confidence intervals for a
@@ -79,10 +79,10 @@
 #' outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
 #' Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 #' VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)]
-#' merc.rel(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar,
+#' mercRel(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar,
 #'          vcovEstimates = VBstar,sur = c("x"), woe = c("s"), weri = c("x","x2","x3"),
 #'          rr=3, ms=test, weights=wts, method = "lm" )
-#' merc.rel(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
+#' mercRel(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
 #'          weri = c("x","x2","x3"), outcome = c("y"), rr=3,
 #'          ms=test,method = "lm",weights=wts)
 #'
@@ -94,16 +94,16 @@
 #' outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
 #' Bstar<-outcomeParam[2:length(outcomeParam)] #p' x 1
 #' VBstar<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)] # p' x p'
-#' merc.rel(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar,
+#' mercRel(supplyEstimates=TRUE, relib=relib, pointEstimates = Bstar, vcovEstimates = VBstar,
 #'          sur = c("x"), woe = c("s"), weri = c("x","x2","x3"), rr=3, ms=test, weights=wts,
 #'          link = "logit",method = "glm" )
-#' merc.rel(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
+#' mercRel(supplyEstimates=FALSE, relib = relib, sur = c("x"), woe = c("s"),
 #'          weri = c("x","x2","x3"),outcome = c("case"), rr=3, ms=test,
 #'          method = "glm", family = binomial, link = "logit", weights=wts)
 #' @importFrom stats as.formula coef cov na.omit vcov
 #' @export
 
-merc.rel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimates=NA, sur, woe=NA,
+mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimates=NA, sur, woe=NA,
                      outcome=NA, weri, rr, ms, weights, r1=1, method="lm",family=NA, link=NA){
   # require("Matrix")
   # require("gdata")

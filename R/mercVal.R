@@ -1,8 +1,8 @@
 ########################
-# merc.val function #
+# mercVal function #
 ########################
 
-#' @title merc.val
+#' @title mercVal
 #' @author Wenze Tang and Molin Wang
 #' @description This function corrects for measurement error in exposure or
 #'  exposure and covariates and gives corrected coefficients associated standard
@@ -62,7 +62,7 @@
 
 
 
-merc.val<-function(supplyEstimates=FALSE, ms,vs,
+mercVal<-function(supplyEstimates=FALSE, ms,vs,
                    sur, exp, covCalib=NULL, covOutcome=NULL, outcome=NA, method="lm",family=NA,link=NA, external=TRUE
                    ,pointEstimates=NA, vcovEstimates=NA){
 # require("stats")

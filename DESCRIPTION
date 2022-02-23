@@ -2,7 +2,7 @@ Package: merc
 Type: Package
 Title: Regression calibration methods for validation study and reliability study
 Version: 0.1.0.9000
-Author: Xiaofan Liu, Wenze Tang, Xin Zhou, Molin Wang
+Author: Xiaofan Liu, Wenze Tang, Molin Wang, Xin Zhou
 Maintainer: Xiaofan Liu, Wenze Tang 
 Description: 
     Use four spaces when indenting paragraphs within the Description.

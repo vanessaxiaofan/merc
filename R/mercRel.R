@@ -38,7 +38,14 @@
 #' @param sur character vector of mismeasured exposure and covariates (i.e.
 #'   surrogates) in the main study dataset
 #' @param woe Character vector of names of perfectly measured covariates
-#' @param outcome Outcome variable
+#' @param outcome Outcome variable, required if method is lm or glm.
+#' @param event Required if method is cox. The event status indicator, normally 0=alive/censored, 1=dead/event.
+#'  For interval censored data, the status indicator is 0=right censored, 1= event at time, 2=left censored, 3=interval censored.
+#' @param time Required if method is cox. For right censored data, this is the follow up time. For interval data,
+#' the first argument is the starting time for the interval.
+#' @param method Methods for modeling, currently only `lm`, `glm` and `cox` methods are available. Required.
+#' @param family Supply family parameter to pass to glm function. Not a character. Required if method="glm".
+#' @param link Supply link parameter to pass to glm function. Should be character. Required if method="glm".
 #' @param weri  Character vector of names of variables which have reliability
 #'   measures. These should have a set of variable names for each reliability
 #'   measure (e.g. x1 y1 z1 x2 y2 z2 for measures). The variables must be in the
@@ -49,12 +56,6 @@
 #'   increments for the odds ratio or regression slopes.Including mismeasured
 #'   and perfectly measured variables
 #' @param r1 Number of replicates in main study
-#' @param method Methods for modeling, currently only `lm` or `glm` methods are
-#'   available. Required.
-#' @param family Supply family parameter to pass to glm function. Not a
-#'   character. Required if method="glm".
-#' @param link Supply link parameter to pass to glm function. Should be
-#'   character. Required if method="glm".
 #' @return printable dataframe from standard regression results (when
 #'   supplyEstimates==FALSE) as well as corrected results
 #' @examples
@@ -104,7 +105,7 @@
 #' @export
 
 mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimates=NA, sur, woe=NA,
-                     outcome=NA, weri, rr, ms, weights, r1=1, method="lm",family=NA, link=NA){
+                    event=NA, time=NA, outcome=NA, weri, rr, ms, weights, r1=1, method="lm",family=NA, link=NA){
   # require("Matrix")
   # require("gdata")
   # require("dplyr")
@@ -188,8 +189,13 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
   ##################################
   # create formula for outcome model
   if(supplyEstimates==FALSE){
+    if(method=="cox"){
+      outcomeFormula<-paste0("~",paste0(sur,collapse="+"),"+",paste0(woe,collapse="+"))
+      allVars_ms<-c(time,event,sur,woe)
+    }else{
       outcomeFormula<-paste0("~",paste0(sur,collapse="+"),"+",paste0(woe,collapse="+"))
       allVars_ms<-c(outcome,sur,woe)
+    }
   }
 
   if(supplyEstimates==FALSE){
@@ -210,9 +216,15 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
       outcomeParam=coef(outModel)
       outcomeParamVCOV=vcov(outModel)
       outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
-    }else{
+    }else if(method=="glm"){
       outModel<-stats::glm(formula=as.formula(paste0(outcome,outcomeFormula)),
                     data=ms_complete,family=family(link=link))
+      outcomeParam=coef(outModel)
+      outcomeParamVCOV=vcov(outModel)
+      outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
+    }else if(method=="cox"){
+      outModel<-survival::coxph(formula=as.formula(paste0("Surv(",time,",", event,")",outcomeFormula)),
+                      data=ms_complete)
       outcomeParam=coef(outModel)
       outcomeParamVCOV=vcov(outModel)
       outcomeModelResults<-(list(outcomeParam,outcomeParamVCOV))
@@ -220,9 +232,14 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
   }
 
   if(supplyEstimates==FALSE){
-    B<-t(t(outcomeParam[2:length(outcomeParam)])) #p' x 1
-    V<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)] # p' x p'
-  }else if(supplyEstimates==TRUE){
+    if(method=="cox"){
+      B<-t(t(outcomeParam)) #p' x 1
+      V<-outcomeParamVCOV[1:length(outcomeParam),1:length(outcomeParam)] # p' x p'
+    }else{
+      B<-t(t(outcomeParam[2:length(outcomeParam)])) #p' x 1
+      V<-outcomeParamVCOV[2:length(outcomeParam),2:length(outcomeParam)] # p' x p'
+    }
+     }else if(supplyEstimates==TRUE){
     B<-as.matrix(pointEstimates)
     V<-vcovEstimates
   }

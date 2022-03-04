@@ -24,7 +24,8 @@ Imports:
     Hmisc,
     lmtest,
     data.table,
-    ggplot2
+    ggplot2,
+    survival
 URL: https://github.com/vanessaxiaofan/merc
 BugReports: https://github.com/vanessaxiaofan/merc/issues
 Depends: 

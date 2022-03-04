@@ -11,6 +11,8 @@ mercRel(
   vcovEstimates = NA,
   sur,
   woe = NA,
+  event = NA,
+  time = NA,
   outcome = NA,
   weri,
   rr,
@@ -50,7 +52,13 @@ surrogates) in the main study dataset}
 
 \item{woe}{Character vector of names of perfectly measured covariates}
 
-\item{outcome}{Outcome variable}
+\item{event}{Required if method is cox. The event status indicator, normally 0=alive/censored, 1=dead/event.
+For interval censored data, the status indicator is 0=right censored, 1= event at time, 2=left censored, 3=interval censored.}
+
+\item{time}{Required if method is cox. For right censored data, this is the follow up time. For interval data,
+the first argument is the starting time for the interval.}
+
+\item{outcome}{Outcome variable, required if method is lm or glm.}
 
 \item{weri}{Character vector of names of variables which have reliability
 measures. These should have a set of variable names for each reliability
@@ -68,14 +76,11 @@ and perfectly measured variables}
 
 \item{r1}{Number of replicates in main study}
 
-\item{method}{Methods for modeling, currently only `lm` or `glm` methods are
-available. Required.}
+\item{method}{Methods for modeling, currently only `lm`, `glm` and `cox` methods are available. Required.}
 
-\item{family}{Supply family parameter to pass to glm function. Not a
-character. Required if method="glm".}
+\item{family}{Supply family parameter to pass to glm function. Not a character. Required if method="glm".}
 
-\item{link}{Supply link parameter to pass to glm function. Should be
-character. Required if method="glm".}
+\item{link}{Supply link parameter to pass to glm function. Should be character. Required if method="glm".}
 }
 \value{
 printable dataframe from standard regression results (when

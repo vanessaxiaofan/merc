@@ -89,10 +89,9 @@ printable dataframe from standard regression results (when
 \description{
 This funciton calculates regression coefficients, their standard
   errors, and odds ratios, when relevant, and 95% confidence intervals for a
-  biologically meaningful difference specified by model covariates. Logistic
-  model are implemented. A reliability study is required to empirically
-  charaterize the measurement error model. Details are given in Rosner et
-  al.(1989), Rosner et al.(1990), and Rosner et al.(1992) including "real
+  biologically meaningful difference specified by model covariates. A reliability
+  study is required to empirically charaterize the measurement error model. Details
+   are given in Rosner et al.(1989), Rosner et al.(1990), and Rosner et al.(1992) including "real
   data" examples
 }
 \examples{

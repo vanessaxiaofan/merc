@@ -19,7 +19,13 @@ Imports:
     stats,
     Matrix,
     earth,
-    matrixcalc
+    matrixcalc,
+    ggpubr,
+    Hmisc,
+    lmtest,
+    data.table,
+    ggplot2,
+    survival
 URL: https://github.com/vanessaxiaofan/merc
 BugReports: https://github.com/vanessaxiaofan/merc/issues
 Depends: 

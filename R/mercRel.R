@@ -386,7 +386,7 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     colnames(Uncorrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)","lower 95%CI","upper 95%CI")
     #rownames(Uncorrected)<-outcomeModelVarNames
     Corrected <-  data.frame(t(WT), BLINR, SEDN, t(ODDRN), zValueN, pValueN, t(LBN), t(UBN))
-    colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)", "lower 95%CI(OR)","lower 95%CI(OR)")
+    colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)", "lower 95%CI(OR)","upper 95%CI(OR)")
     #rownames(Corrected)<-outcomeModelVarNames
     outputList<-list(Uncorrected,Corrected)
     names(outputList)<-c("Uncorrected","Corrected")

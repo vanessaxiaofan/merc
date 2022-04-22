@@ -149,7 +149,7 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     }
   }
 
-  if(supplyEstimates==FALSE & method="cox"){
+  if(supplyEstimates==FALSE & method=="cox"){
     if(missing(event)){
       stop("event is missing.")
     }else if(class(event)!="character"|event==""|event==" "){

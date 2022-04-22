@@ -141,11 +141,24 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     stop("Input weights must be of data.frame class.")
   }
 
-  if(supplyEstimates==FALSE){
+  if(supplyEstimates==FALSE & method!="cox"){
     if(missing(outcome)){
       stop("Outcome is missing.")
     }else if(class(outcome)!="character"|outcome==""|outcome==" "){
       stop("outcome is not supplied with appropriate character.")
+    }
+  }
+
+  if(supplyEstimates==FALSE & method="cox"){
+    if(missing(event)){
+      stop("event is missing.")
+    }else if(class(event)!="character"|event==""|event==" "){
+      stop("event is not supplied with appropriate character.")
+    }
+    if(missing(time)){
+      stop("time is missing.")
+    }else if(class(time)!="character"|time==""|time==" "){
+      stop("time is not supplied with appropriate character.")
     }
   }
 

@@ -1,4 +1,5 @@
 library(mgcv)
+library(coxed)
 ## code to prepare `DATASET` dataset goes here
 set.seed(1000)
 #### Logistic Regression on one covariates measured with error and one confounder， 4 replicates ####
@@ -21,10 +22,10 @@ p<-exp(-2.4+log(1.5)*x[1:1500]+log(1.5)*W)/
   (1+exp(-2.4+log(1.5)*x[1:1500]+log(1.5)*W))
 Y<-sapply(p,function(x) rbinom(1,1,x))
 
-mainRelib1 <- as.data.frame(cbind(z.main,W,Y))
-colnames(mainRelib1) <- c("x","s", "Y")
-relib1 <- as.data.frame(z.rep)
-colnames(relib1) <- c("x1","x2","x3","x4")
+mainLogRel <- as.data.frame(cbind(z.main,W,Y))
+colnames(mainLogRel) <- c("x","s", "Y")
+relibLog <- as.data.frame(z.rep)
+colnames(relibLog) <- c("x1","x2","x3","x4")
 
 #### Linear Regression on two covariates measured with error and two confounders , 2 replicates####
 
@@ -52,16 +53,37 @@ z.rep<-list(rbind(cbind(x[1501:2000,1]+rnorm(500,0,sqrt(0.4)),
 #prevalence about 0.105
 Y <- -2.7+1.5*rowSums(x[1:1500,1:3])+1.5*w2[1:1500]
 
-mainRelib2 <- as.data.frame(cbind(z.main,W,Y))
-colnames(mainRelib2) <- c("x","z","s1","s2", "Y")
+mainLinearRel <- as.data.frame(cbind(z.main,W,Y))
+colnames(mainLinearRel) <- c("x","z","s1","s2", "Y")
 t1 <- as.data.frame(z.rep[[1]])
 t2 <- as.data.frame(z.rep[[2]])
-relib2 <- as.data.frame(cbind(t1$V1,t2$V1,t1$V2,t2$V2))
-colnames(relib2) <- c("x1","z1","x2","z2")
+relibLinear <- as.data.frame(cbind(t1$V1,t2$V1,t1$V2,t2$V2))
+colnames(relibLinear) <- c("x1","z1","x2","z2")
+
+#### Cox Regression on one covariate measured with error and two confounders , 4 replicates####
+simdata <- coxed::sim.survdata(N=1500, T=250, xvars=3, censor=.2, num.data.frames = 1)
+#summary(simdata$data)
+
+mainCoxRel <- as.data.frame(simdata$data)
+names(mainCoxRel) <- c("x","s1","s2","Y","failed")
+
+x <- mainCoxRel$x
+
+z.rep<-rbind(cbind(x[1:750]+rnorm(750,0,sqrt(0.4)),
+                   x[1:750]+rnorm(750,0,sqrt(0.4)),
+                   x[1:750]+rnorm(750,0,sqrt(0.4)),
+                   x[1:750]+rnorm(750,0,sqrt(0.4))),
+             cbind(x[751:1500]+rnorm(750,0,sqrt(0.4)),
+                   x[751:1500]+rnorm(750,0,sqrt(0.4)),
+                   x[751:1500]+rnorm(750,0,sqrt(0.4)),
+                   x[751:1500]+rnorm(750,0,sqrt(0.4))))
+relibCox <- as.data.frame(z.rep)
+colnames(relibCox) <- c("x1","x2","x3","x4")
 
 
-
-usethis::use_data(mainRelib1,overwrite=TRUE)
-usethis::use_data(mainRelib2,overwrite=TRUE)
-usethis::use_data(relib1,overwrite=TRUE)
-usethis::use_data(relib2,overwrite=TRUE)
+usethis::use_data(mainLogRel,overwrite=TRUE)
+usethis::use_data(mainLinearRel,overwrite=TRUE)
+usethis::use_data(mainCoxRel,overwrite=TRUE)
+usethis::use_data(relibLog,overwrite=TRUE)
+usethis::use_data(relibLinear,overwrite=TRUE)
+usethis::use_data(relibCox,overwrite=TRUE)

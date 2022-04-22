@@ -141,13 +141,13 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     stop("Input weights must be of data.frame class.")
   }
 
-  if(supplyEstimates==FALSE & method!="cox"){
-    if(missing(outcome)){
-      stop("Outcome is missing.")
-    }else if(class(outcome)!="character"|outcome==""|outcome==" "){
-      stop("outcome is not supplied with appropriate character.")
-    }
-  }
+  # if(supplyEstimates==FALSE & method!="cox"){
+  #   if(missing(outcome)){
+  #     stop("Outcome is missing.")
+  #   }else if(class(outcome)!="character"|outcome==""|outcome==" "){
+  #     stop("outcome is not supplied with appropriate character.")
+  #   }
+  # }
 
   if(supplyEstimates==FALSE & method=="cox"){
     if(missing(event)){
@@ -212,9 +212,9 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
 
   if(supplyEstimates==FALSE){
     ms_complete<- na.omit(dplyr::select(ms,dplyr::all_of(allVars_ms)))
-    X_MS <- stats::model.matrix(object= as.formula(outcomeFormula),data=ms_complete)
-    Y_MS<- ms_complete[,outcome]
-    outcomeModelVarNames<-colnames(X_MS)
+    # X_MS <- stats::model.matrix(object= as.formula(outcomeFormula),data=ms_complete)
+    # Y_MS<- ms_complete[,outcome]
+    # outcomeModelVarNames<-colnames(X_MS)
   }else if(supplyEstimates==TRUE){
     outcomeModelVarNames<-c(names(pointEstimates))
   }

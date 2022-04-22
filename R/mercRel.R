@@ -141,7 +141,7 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     stop("Input weights must be of data.frame class.")
   }
 
-<<<<<<< HEAD
+
   if(supplyEstimates==FALSE){
     if(method=="cox"){
       if(missing(event)){
@@ -160,7 +160,9 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
       }else if(class(outcome)!="character"|outcome==""|outcome==" "){
         stop("outcome is not supplied with appropriate character.")
       }
-=======
+    }
+  }
+
   # if(supplyEstimates==FALSE & method!="cox"){
   #   if(missing(outcome)){
   #     stop("Outcome is missing.")
@@ -169,20 +171,6 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
   #   }
   # }
 
-  if(supplyEstimates==FALSE & method=="cox"){
-    if(missing(event)){
-      stop("event is missing.")
-    }else if(class(event)!="character"|event==""|event==" "){
-      stop("event is not supplied with appropriate character.")
-    }
-    if(missing(time)){
-      stop("time is missing.")
-    }else if(class(time)!="character"|time==""|time==" "){
-      stop("time is not supplied with appropriate character.")
->>>>>>> 1ebe6a5a4e3a9d3be83c6667fe683f976daa82d1
-    }
-
-  }
 
   ## check if main dataset contains data indicated by sur, woe
   if(supplyEstimates==FALSE){

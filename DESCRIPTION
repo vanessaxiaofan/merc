@@ -25,6 +25,7 @@ Imports:
     lmtest,
     data.table,
     ggplot2,
+    coxed,
     survival
 URL: https://github.com/vanessaxiaofan/merc
 BugReports: https://github.com/vanessaxiaofan/merc/issues

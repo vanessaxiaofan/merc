@@ -142,11 +142,25 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
   }
 
   if(supplyEstimates==FALSE){
-    if(missing(outcome)){
-      stop("Outcome is missing.")
-    }else if(class(outcome)!="character"|outcome==""|outcome==" "){
-      stop("outcome is not supplied with appropriate character.")
+    if(method=="cox"){
+      if(missing(event)){
+        stop("event is missing.")
+      }else if(class(event)!="character"|event==""|event==" "){
+        stop("event is not supplied with appropriate character.")
+      }
+      if(missing(time)){
+        stop("time is missing.")
+      }else if(class(time)!="character"|time==""|time==" "){
+        stop("time is not supplied with appropriate character.")
+      }
+    }else{
+      if(missing(outcome)){
+        stop("Outcome is missing.")
+      }else if(class(outcome)!="character"|outcome==""|outcome==" "){
+        stop("outcome is not supplied with appropriate character.")
+      }
     }
+
   }
 
   ## check if main dataset contains data indicated by sur, woe
@@ -199,9 +213,9 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
 
   if(supplyEstimates==FALSE){
     ms_complete<- na.omit(dplyr::select(ms,dplyr::all_of(allVars_ms)))
-    X_MS <- stats::model.matrix(object= as.formula(outcomeFormula),data=ms_complete)
-    Y_MS<- ms_complete[,outcome]
-    outcomeModelVarNames<-colnames(X_MS)
+    # X_MS <- stats::model.matrix(object= as.formula(outcomeFormula),data=ms_complete)
+    # Y_MS<- ms_complete[,outcome]
+    # outcomeModelVarNames<-colnames(X_MS)
   }else if(supplyEstimates==TRUE){
     outcomeModelVarNames<-c(names(pointEstimates))
   }
@@ -402,7 +416,7 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     colnames(Uncorrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)","lower 95%CI","upper 95%CI")
     #rownames(Uncorrected)<-outcomeModelVarNames
     Corrected <-  data.frame(t(WT), BLINR, SEDN, t(ODDRN), zValueN, pValueN, t(LBN), t(UBN))
-    colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)", "lower 95%CI(OR)","lower 95%CI(OR)")
+    colnames(Corrected)<-c("Weights","B","SE(B)","OR(B)","Z Value","Pr(>|Z|)", "lower 95%CI(OR)","upper 95%CI(OR)")
     #rownames(Corrected)<-outcomeModelVarNames
     outputList<-list(Uncorrected,Corrected)
     names(outputList)<-c("Uncorrected","Corrected")
@@ -427,7 +441,7 @@ mercRel <- function(supplyEstimates=FALSE, relib, pointEstimates=NA, vcovEstimat
     colnames(Uncorrected)<-c("Weights","B","SE(B)","Z Value","Pr(>|Z|)","lower 95%CI","upper 95%CI")
     #rownames(Uncorrected)<-outcomeModelVarNames
     Corrected <-  data.frame(t(WT), BLINR, SEDN, zValueN, pValueN, t(LBN), t(UBN))
-    colnames(Corrected)<-c("Weights","B","SE(B)","Z Value","Pr(>|Z|)","lower 95%CI","lower 95%CI")
+    colnames(Corrected)<-c("Weights","B","SE(B)","Z Value","Pr(>|Z|)","lower 95%CI","upper 95%CI")
     #rownames(Corrected)<-names(B)
     outputList<-list(Uncorrected,Corrected)
     names(outputList)<-c("Uncorrected","Corrected")

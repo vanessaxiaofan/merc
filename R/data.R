@@ -2,7 +2,7 @@
 #' Logistic Regression on one covariate measured with error and one confounder， 4 replicates [reliability study]
 #'
 #' This is the reliability dataset (relibLog)
-#' @format A data frame with 1500 rows and 4 reliability measures for the mismeasured variable x:
+#' @format A data frame with 700 rows and 4 reliability measures for the mismeasured variable x:
 #' \describe{
 #'   \item{x1}{first reliability measure for the covariate measured with error}
 #'   \item{x2}{second reliability measure for the covariate measured with error}
@@ -27,7 +27,7 @@
 #' This is a simulated Reliability study.
 #' Linear Regression on two covariates measured with error and two confounders , 2 replicates
 #' This is the reliability dataset (relibLinear)
-#' @format A data frame with 1500 rows and 2 reliability measures for each 2 mismeasured variables
+#' @format A data frame with 900 rows and 2 reliability measures for each 2 mismeasured variables
 #' \describe{
 #'   \item{x1}{first reliability measure for the mismeasured x}
 #'   \item{z1}{first reliability measure for the mismeasured z}
@@ -55,7 +55,7 @@
 #' This is a simulated Reliability study.
 #' Cox Regression on one covariate measured with error and two confounders , 4 replicates
 #' This is the reliability dataset (relibCox)
-#' @format A data frame with 1500 rows and 4 reliability measures for one mismeasured variable
+#' @format A data frame with 750 rows and 4 reliability measures for one mismeasured variable
 #' \describe{
 #'   \item{x1}{first reliability measure for the covariate measured with error}
 #'   \item{x2}{second reliability measure for the covariate measured with error}

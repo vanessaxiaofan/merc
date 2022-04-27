@@ -9,14 +9,11 @@ z.main <- matrix(x[1:1500]+rnorm(1500,0,sqrt(0.4)))
 W<-matrix(sapply(x[1:1500], function(t){if(t>median(x)) {return(rbinom(1,1,0.5))}
   if(t<=median(x)){return(rbinom(1,1,0.3))}}))
 r<-c(rep(3,700),rep(4,800))
-z.rep<-rbind(cbind(x[1501:2200]+rnorm(700,0,sqrt(0.4)),
+z.rep<- cbind(x[1501:2200]+rnorm(700,0,sqrt(0.4)),
                    x[1501:2200]+rnorm(700,0,sqrt(0.4)),
                    x[1501:2200]+rnorm(700,0,sqrt(0.4)),
-                   x[1501:2200]+rnorm(700,0,sqrt(0.4))),
-             cbind(x[2201:3000]+rnorm(800,0,sqrt(0.4)),
-                   x[2201:3000]+rnorm(800,0,sqrt(0.4)),
-                   x[2201:3000]+rnorm(800,0,sqrt(0.4)),
-                   x[2201:3000]+rnorm(800,0,sqrt(0.4))))
+                   x[1501:2200]+rnorm(700,0,sqrt(0.4)))
+
 #prevalence about 0.105
 p<-exp(-2.4+log(1.5)*x[1:1500]+log(1.5)*W)/
   (1+exp(-2.4+log(1.5)*x[1:1500]+log(1.5)*W))
@@ -41,15 +38,11 @@ z.main = x[1:1500,1:2]+rnorm(1500,0,sqrt(0.4))
 z.rep<-list(rbind(cbind(x[1501:2000,1]+rnorm(500,0,sqrt(0.4)),
                         x[1501:2000,1]+rnorm(500,0,sqrt(0.4))),
                   cbind(x[2001:2400,1]+rnorm(400,0,sqrt(0.4)),
-                        x[2001:2400,1]+rnorm(400,0,sqrt(0.4))),
-                  cbind(x[2401:3000,1]+rnorm(600,0,sqrt(0.4)),
-                        x[2401:3000,1]+rnorm(600,0,sqrt(0.4)))),
+                        x[2001:2400,1]+rnorm(400,0,sqrt(0.4)))),
             rbind(cbind(x[1501:2000,2]+rnorm(500,0,sqrt(0.4)),
                         x[1501:2000,2]+rnorm(500,0,sqrt(0.4))),
                   cbind(x[2001:2400,2]+rnorm(400,0,sqrt(0.4)),
-                        x[2001:2400,2]+rnorm(400,0,sqrt(0.4))),
-                  cbind(x[2401:3000,2]+rnorm(600,0,sqrt(0.4)),
-                        x[2401:3000,2]+rnorm(600,0,sqrt(0.4)))))
+                        x[2001:2400,2]+rnorm(400,0,sqrt(0.4)))))
 #prevalence about 0.105
 Y <- -2.7+1.5*rowSums(x[1:1500,1:3])+1.5*w2[1:1500]
 
@@ -72,11 +65,7 @@ x <- mainCoxRel$x
 z.rep<-rbind(cbind(x[1:750]+rnorm(750,0,sqrt(0.4)),
                    x[1:750]+rnorm(750,0,sqrt(0.4)),
                    x[1:750]+rnorm(750,0,sqrt(0.4)),
-                   x[1:750]+rnorm(750,0,sqrt(0.4))),
-             cbind(x[751:1500]+rnorm(750,0,sqrt(0.4)),
-                   x[751:1500]+rnorm(750,0,sqrt(0.4)),
-                   x[751:1500]+rnorm(750,0,sqrt(0.4)),
-                   x[751:1500]+rnorm(750,0,sqrt(0.4))))
+                   x[1:750]+rnorm(750,0,sqrt(0.4))))
 relibCox <- as.data.frame(z.rep)
 colnames(relibCox) <- c("x1","x2","x3","x4")
 

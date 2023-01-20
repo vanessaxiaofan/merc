@@ -7,7 +7,7 @@
 Linear Regression on two covariates measured with error and two confounders , 2 replicates
 This is the reliability dataset (relibLinear)}
 \format{
-A data frame with 1500 rows and 2 reliability measures for each 2 mismeasured variables
+A data frame with 900 rows and 2 reliability measures for each 2 mismeasured variables
 \describe{
   \item{x1}{first reliability measure for the mismeasured x}
   \item{z1}{first reliability measure for the mismeasured z}

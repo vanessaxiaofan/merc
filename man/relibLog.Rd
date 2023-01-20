@@ -6,7 +6,7 @@
 \title{This is a simulated Reliability study.
 Logistic Regression on one covariate measured with error and one confounder， 4 replicates [reliability study]}
 \format{
-A data frame with 1500 rows and 4 reliability measures for the mismeasured variable x:
+A data frame with 700 rows and 4 reliability measures for the mismeasured variable x:
 \describe{
   \item{x1}{first reliability measure for the covariate measured with error}
   \item{x2}{second reliability measure for the covariate measured with error}

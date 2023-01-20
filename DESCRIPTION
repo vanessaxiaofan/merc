@@ -3,7 +3,7 @@ Type: Package
 Title: Regression calibration methods for validation study and reliability study
 Version: 0.1.0.9000
 Author: Xiaofan Liu, Wenze Tang, Molin Wang, Xin Zhou
-Maintainer: Xiaofan Liu <liuxiaofanruc@163.com>
+Maintainer: Xiaofan Liu <liuxiaof@usc.edu>
 Description: 
     Use four spaces when indenting paragraphs within the Description.
 License: MIT + file LICENSE

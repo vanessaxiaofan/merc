@@ -7,7 +7,7 @@
 Cox Regression on one covariate measured with error and two confounders , 4 replicates
 This is the reliability dataset (relibCox)}
 \format{
-A data frame with 1500 rows and 4 reliability measures for one mismeasured variable
+A data frame with 750 rows and 4 reliability measures for one mismeasured variable
 \describe{
   \item{x1}{first reliability measure for the covariate measured with error}
   \item{x2}{second reliability measure for the covariate measured with error}

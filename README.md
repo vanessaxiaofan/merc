@@ -11,14 +11,8 @@ validation study and reliability study.
 
 ## Installation
 
-You can install the released version of merc from
-[CRAN](https://CRAN.R-project.org) with:
 
-``` r
-install.packages("merc")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+Install the development version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
